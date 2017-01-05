@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script>(function(html){html.className = html.className.replace(/\bno-js\b/,'js')})(document.documentElement);</script>
+	<link rel="stylesheet" id="twentyseventeen-fonts-css" href="https://fonts.googleapis.com/css?family=Libre+Franklin%3A300%2C300i%2C400%2C400i%2C600%2C600i%2C800%2C800i&amp;subset=latin%2Clatin-ext">
+	<link rel="stylesheet" href="https://wp-themes.com/wp-content/themes/twentyseventeen/style.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/atom-one-light.min.css" />
+</head>
+<body>
+<div id="page" class="site">
+	<a class="skip-link screen-reader-text" href="#content">Skip to content</a>
+
+	<header id="masthead" class="site-header" role="banner">
+		<div class="custom-header" style="margin-bottom: 72px">
+			<div class="custom-header-media"></div>
+			<div class="site-branding">
+				<div class="wrap">
+					<div class="site-branding-text">
+						<p class="site-title"><a href="#" rel="home">Twenty Seventeen</a></p>
+						<p class="site-description">Just another WordPress site</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="navigation-top">
+			<div class="wrap">
+				<nav id="site-navigation" class="main-navigation" role="navigation" aria-label="Top Menu">
+					<button class="menu-toggle" aria-controls="top-menu" aria-expanded="false"><svg class="icon icon-bars" aria-hidden="true" role="img"> <use href="#icon-bars" xlink:href="#icon-bars"></use> </svg><svg class="icon icon-close" aria-hidden="true" role="img"> <use href="#icon-close" xlink:href="#icon-close"></use> </svg>Menu</button>
+					<div class="menu-main-menu-container">
+						<ul id="top-menu" class="menu">
+							<li class="menu-item"><a href="#">Home</a></li>
+							<li class="menu-item menu-item-has-children">
+								<a href="#">Parent<svg class="icon icon-angle-down" aria-hidden="true" role="img"> <use href="#icon-angle-down" xlink:href="#icon-angle-down"></use> </svg></a>
+								<ul class="sub-menu">
+									<li class="menu-item menu-item-has-children">
+										<a href="#">Child 01<svg class="icon icon-angle-down" aria-hidden="true" role="img"> <use href="#icon-angle-down" xlink:href="#icon-angle-down"></use> </svg></a>
+										<ul class="sub-menu">
+											<li class="menu-item"><a href="#">Grandchild 01</a> </li>
+											<li class="menu-item"><a href="#">Grandchild 02</a></li>
+										</ul>
+									</li>
+									<li class="menu-item"><a href="#">Child 02</a></li>
+								</ul>
+							</li>
+							<li class="menu-item menu-item-has-children">
+								<a href="#">Categories<svg class="icon icon-angle-down" aria-hidden="true" role="img"> <use href="#icon-angle-down" xlink:href="#icon-angle-down"></use> </svg></a>
+								<ul class="sub-menu">
+									<li class="menu-item"><a href="#">Category 01</a></li>
+									<li class="menu-item"><a href="#">Category 02</a></li>
+									<li class="menu-item"><a href="#">Category 03</a></li>
+									<li class="menu-item"><a href="#">Category 04</a></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</nav>
+			</div>
+		</div>
+	</header>
+
+	<div id="content" class="site-content">
+		<div class="wrap">
+
+<pre><code class="php">
+function twentyseventeen_scripts() {
+	wp_enqueue_script(
+		'twentyseventeen-nav-menus',
+		get_theme_file_uri( 'assets/js/wp-nav-menus.js' ),
+		array(),
+		'1.0.0',
+		true
+	);
+
+	wp_localize_script( 'twentyseventeen-nav-menus', '_cedaroNavMenuL10n', array(
+		'collapseSubmenu' => __( 'Collapse child menu', 'twentyseventeen' ),
+		'expandSubmenu'   => __( 'Expand child menu', 'twentyseventeen' ),
+	) );
+}
+add_action( 'wp_enqueue_scripts', 'twentyseventeen_scripts' );
+</code></pre>
+
+<pre><code class="javascript">
+$( '.menu-main-menu-container' )
+	.cedaroNavMenu({
+		activeMenuItemClass: 'focus',
+		breakpoint: 768,
+		expandedSubmenuClass: 'toggled-on',
+		expandedSubmenuToggleClass: 'toggled-on',
+		submenuToggleClass: 'dropdown-toggle'
+	})
+	.find( '.dropdown-toggle' )
+	.prepend( twentyseventeenScreenReaderText.icon );
+</code></pre>
+
+		</div>
+	</div>
+
+</div>
+
+
+	<svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+		<defs>
+			<symbol id="icon-angle-down" viewBox="0 0 21 32">
+				<path class="path1" d="M19.196 13.143q0 0.232-0.179 0.411l-8.321 8.321q-0.179 0.179-0.411 0.179t-0.411-0.179l-8.321-8.321q-0.179-0.179-0.179-0.411t0.179-0.411l0.893-0.893q0.179-0.179 0.411-0.179t0.411 0.179l7.018 7.018 7.018-7.018q0.179-0.179 0.411-0.179t0.411 0.179l0.893 0.893q0.179 0.179 0.179 0.411z"></path>
+			</symbol>
+			<symbol id="icon-bars" viewBox="0 0 27 32">
+				<path class="path1" d="M27.429 24v2.286q0 0.464-0.339 0.804t-0.804 0.339h-25.143q-0.464 0-0.804-0.339t-0.339-0.804v-2.286q0-0.464 0.339-0.804t0.804-0.339h25.143q0.464 0 0.804 0.339t0.339 0.804zM27.429 14.857v2.286q0 0.464-0.339 0.804t-0.804 0.339h-25.143q-0.464 0-0.804-0.339t-0.339-0.804v-2.286q0-0.464 0.339-0.804t0.804-0.339h25.143q0.464 0 0.804 0.339t0.339 0.804zM27.429 5.714v2.286q0 0.464-0.339 0.804t-0.804 0.339h-25.143q-0.464 0-0.804-0.339t-0.339-0.804v-2.286q0-0.464 0.339-0.804t0.804-0.339h25.143q0.464 0 0.804 0.339t0.339 0.804z"></path>
+			</symbol>
+			<symbol id="icon-close" viewBox="0 0 25 32">
+				<path class="path1" d="M23.179 23.607q0 0.714-0.5 1.214l-2.429 2.429q-0.5 0.5-1.214 0.5t-1.214-0.5l-5.25-5.25-5.25 5.25q-0.5 0.5-1.214 0.5t-1.214-0.5l-2.429-2.429q-0.5-0.5-0.5-1.214t0.5-1.214l5.25-5.25-5.25-5.25q-0.5-0.5-0.5-1.214t0.5-1.214l2.429-2.429q0.5-0.5 1.214-0.5t1.214 0.5l5.25 5.25 5.25-5.25q0.5-0.5 1.214-0.5t1.214 0.5l2.429 2.429q0.5 0.5 0.5 1.214t-0.5 1.214l-5.25 5.25 5.25 5.25q0.5 0.5 0.5 1.214z"></path>
+			</symbol>
+		</defs>
+	</svg>
+
+
+	<script>
+	var _cedaroNavMenuL10n = {
+		collapseSubmenu: 'Collapse child menu',
+		expandSubmenu: 'Expand child menu'
+	};
+	</script>
+	<script src="../dist/wp-nav-menus.js"></script>
+	<script>
+	(function() {
+		var menu = cedaroNavMenu( '.menu', {
+			activeMenuItemClass: 'focus',
+			breakpoint: 768,
+			expandedSubmenuClass: 'toggled-on',
+			expandedSubmenuToggleClass: 'toggled-on',
+			submenuToggleClass: 'dropdown-toggle'
+		});
+
+		menu.initialize();
+
+
+		var twentyseventeenScreenReaderText = {
+			icon: '<svg class="icon icon-angle-down" aria-hidden="true" role="img"> <use href="#icon-angle-down" xlink:href="#icon-angle-down"></use> <span class="svg-fallback icon-angle-down"></span></svg>'
+		};
+
+		Array.prototype.slice.call( menu.el.querySelectorAll( '.dropdown-toggle' ) ).forEach(function( button ) {
+			var div = document.createElement( 'div' );
+			div.innerHTML = twentyseventeenScreenReaderText.icon;
+
+			for ( var i = div.childNodes.length - 1; i >= 0; --i ) {
+				button.insertBefore( div.childNodes[ i ], button.firstChild );
+			}
+
+			div = null;
+		});
+
+		var container = document.querySelector( '.main-navigation' );
+		var menuToggle = document.querySelector( '.menu-toggle' );
+		menuToggle.addEventListener( 'click', function( e ) {
+			container.classList.toggle( 'toggled-on' );
+		}, false );
+	})();
+	</script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</body>
+</html>

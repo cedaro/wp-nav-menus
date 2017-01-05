@@ -1,0 +1,6 @@
+.editorconfig
+.gitignore
+.jshintrc
+banner.tpl
+Gruntfile.js
+examples

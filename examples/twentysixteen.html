@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script>(function(html){html.className = html.className.replace(/\bno-js\b/,'js')})(document.documentElement);</script>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Merriweather%3A400%2C700%2C900%2C400italic%2C700italic%2C900italic%7CMontserrat%3A400%2C700%7CInconsolata%3A400&amp;subset=latin%2Clatin-ext">
+	<link rel="stylesheet" href="https://wp-themes.com/wp-content/themes/twentysixteen/genericons/genericons.css">
+	<link rel="stylesheet" href="https://wp-themes.com/wp-content/themes/twentysixteen/style.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/atom-one-light.min.css">
+</head>
+<body>
+<div id="page" class="site">
+	<div class="site-inner">
+		<a class="skip-link screen-reader-text" href="#content">Skip to content</a>
+
+		<header id="masthead" class="site-header" role="banner">
+			<div class="site-header-main">
+				<div class="site-branding">
+						<p class="site-title"><a href="#" rel="home">Twenty Sixteen</a></p>
+						<p class="site-description">Just another WordPress site</p>
+				</div>
+
+				<button id="menu-toggle" class="menu-toggle">Menu</button>
+
+				<div id="site-header-menu" class="site-header-menu">
+					<nav id="site-navigation" class="main-navigation" role="navigation" aria-label="Primary Menu">
+						<div class="menu-main-menu-container">
+							<ul id="menu-main-menu" class="primary-menu">
+								<li class="menu-item"><a href="#">Home</a></li>
+								<li class="menu-item menu-item-has-children">
+									<a href="#">Parent</a>
+									<ul class="sub-menu">
+										<li class="menu-item menu-item-has-children">
+											<a href="#">Child 01</a>
+											<ul class="sub-menu">
+												<li class="menu-item"><a href="#">Grandchild 01</a> </li>
+												<li class="menu-item"><a href="#">Grandchild 02</a></li>
+											</ul>
+										</li>
+										<li class="menu-item"><a href="#">Child 02</a></li>
+									</ul>
+								</li>
+								<li class="menu-item menu-item-has-children">
+									<a href="#">Categories</a>
+									<ul class="sub-menu">
+										<li class="menu-item"><a href="#">Category 01</a></li>
+										<li class="menu-item"><a href="#">Category 02</a></li>
+										<li class="menu-item"><a href="#">Category 03</a></li>
+										<li class="menu-item"><a href="#">Category 04</a></li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</header>
+
+		<div id="content" class="site-content">
+
+<pre><code class="php">
+function twentysixteen_scripts() {
+	wp_enqueue_script(
+		'twentysixteen-nav-menus',
+		get_theme_file_uri( 'js/wp-nav-menus.js' ),
+		array(),
+		'1.0.0',
+		true
+	);
+
+	wp_localize_script( 'twentysixteen-nav-menus', '_cedaroNavMenuL10n', array(
+		'collapseSubmenu' => __( 'collapse child menu', 'twentysixteen' ),
+		'expandSubmenu'   => __( 'expand child menu', 'twentysixteen' ),
+	) );
+}
+add_action( 'wp_enqueue_scripts', 'twentysixteen_scripts' );
+</code></pre>
+
+<pre><code class="javascript">
+$( '.menu-main-menu-container' ).cedaroNavMenu({
+	activeMenuItemClass: 'focus',
+	breakpoint: 910,
+	expandedSubmenuClass: 'toggled-on',
+	expandedSubmenuToggleClass: 'toggled-on',
+	submenuToggleClass: 'dropdown-toggle'
+});
+</code></pre>
+
+		</div>
+
+	</div>
+</div>
+
+
+	<script>
+	var _cedaroNavMenuL10n = {
+		collapseSubmenu: 'collapse child menu',
+		expandSubmenu: 'expand child menu'
+	};
+	</script>
+	<script src="../dist/wp-nav-menus.js"></script>
+	<script>
+	(function() {
+		var menu = cedaroNavMenu( '.menu-main-menu-container', {
+			activeMenuItemClass: 'focus',
+			breakpoint: 910,
+			expandedSubmenuClass: 'toggled-on',
+			expandedSubmenuToggleClass: 'toggled-on',
+			submenuToggleClass: 'dropdown-toggle'
+		});
+
+		menu.initialize();
+
+		var headerMenu = document.querySelector( '#site-header-menu' );
+		var menuToggle = document.querySelector( '#menu-toggle' );
+		menuToggle.addEventListener( 'click', function( e ) {
+			headerMenu.classList.toggle( 'toggled-on' );
+			menuToggle.classList.toggle( 'toggled-on' );
+		}, false );
+	})();
+	</script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</body>
+</html>
