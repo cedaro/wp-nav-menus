@@ -4,8 +4,8 @@ import test from 'tape';
 test( '_.each', function( t ) {
 	t.plan( 4 );
 
-	var i = 0;
-	var items = [ 'a', 'b', 'c' ];
+	let i = 0;
+	const items = [ 'a', 'b', 'c' ];
 
 	_.each( items, function( item, index ) {
 		t.equal( item, items[ index ] );
@@ -22,18 +22,18 @@ test( '_.each', function( t ) {
 test( '_.extend', function( t ) {
 	t.plan( 5 );
 
-	var a = { value: 1 };
-	var b = { value: 2 };
-	var c = { value: 3, added: true };
+	const a = { value: 1 };
+	const b = { value: 2 };
+	const c = { value: 3, added: true };
 
-	var d = _.extend( null, a );
+	const d = _.extend( null, a );
 	t.deepEqual( d, a );
 
 	_.extend( a, b, c );
 	t.equal( a.value, 3 );
 	t.equal( a.added, true );
 
-	var e = _.extend( {}, b, c );
+	const e = _.extend( {}, b, c );
 	t.equal( b.value, 2 );
 	t.equal( e.value, 3 );
 });

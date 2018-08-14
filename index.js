@@ -1,5 +1,5 @@
-var jQuery = require( 'jquery' ),
-	wpNavMenu = require( './src/entry' );
+import jQuery from 'jquery';
+import wpNavMenu from './src/entry';
 
 if ( jQuery ) {
 	/**
@@ -12,7 +12,7 @@ if ( jQuery ) {
 	 */
 	jQuery.fn.cedaroNavMenu = function( options ) {
 		return this.each(function() {
-			var menu = wpNavMenu( this, options );
+			const menu = wpNavMenu( this, options );
 			menu.initialize();
 		});
 	};

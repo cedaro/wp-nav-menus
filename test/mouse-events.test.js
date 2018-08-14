@@ -3,7 +3,7 @@ import NavMenu from '../src/nav-menu.js';
 import test from 'tape';
 
 function triggerMouse( target, type, relatedTarget ) {
-	var e = document.createEvent( 'MouseEvent' );
+	const e = document.createEvent( 'MouseEvent' );
 	e.initMouseEvent( type, true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, relatedTarget );
 	return target.dispatchEvent( e );
 }
@@ -12,10 +12,10 @@ test( 'collapse submenu when clicking outside the menu', function( t ) {
 	t.plan( 3 );
 
 	document.body.innerHTML = html;
-	var menu = new NavMenu( '.menu' );
+	const menu = new NavMenu( '.menu' );
 	menu.initialize();
 
-	var menuItem = document.getElementById( 'menu-item-1' );
+	const menuItem = document.getElementById( 'menu-item-1' );
 	t.equal( menu.isSubmenuExpanded( menuItem ), false );
 	menu.expandSubmenu( menuItem );
 	t.equal( menu.isSubmenuExpanded( menuItem ), true );
@@ -28,13 +28,13 @@ test( 'toggle submenu when clicking a toggle button', function( t ) {
 	t.plan( 3 );
 
 	document.body.innerHTML = html;
-	var menu = new NavMenu( '.menu' );
+	const menu = new NavMenu( '.menu' );
 	menu.initialize();
 
-	var menuItem = document.getElementById( 'menu-item-1' );
+	const menuItem = document.getElementById( 'menu-item-1' );
 	t.equal( menu.isSubmenuExpanded( menuItem ), false );
 
-	var submenuToggleButton = menu.getSubmenuToggle( menuItem );
+	const submenuToggleButton = menu.getSubmenuToggle( menuItem );
 	triggerMouse( submenuToggleButton, 'click' );
 	t.equal( menu.isSubmenuExpanded( menuItem ), true );
 
@@ -46,16 +46,16 @@ test( 'toggle active menu item when the mouse enters or leaves the menu item', f
 	t.plan( 4 );
 
 	document.body.innerHTML = html;
-	var menu = new NavMenu( '.menu', { hoverTimeout: 0 } );
+	const menu = new NavMenu( '.menu', { hoverTimeout: 0 } );
 	menu.initialize();
 
-	var menuItem = document.getElementById( 'menu-item-1' );
+	const menuItem = document.getElementById( 'menu-item-1' );
 	t.equal( menuItem.classList.contains( NavMenu.defaults.activeMenuItemClass ), false );
 
 	triggerMouse( menuItem, 'mouseover' );
 	t.equal( menuItem.classList.contains( NavMenu.defaults.activeMenuItemClass ), true );
 
-	var menuLink = menuItem.querySelector( 'a' );
+	const menuLink = menuItem.querySelector( 'a' );
 	triggerMouse( menuLink, 'mouseout', menuItem );
 	t.equal( menuItem.classList.contains( NavMenu.defaults.activeMenuItemClass ), true, 'the menu item should remain active when the mouse is over it' );
 
@@ -67,10 +67,10 @@ test( 'toggle submenu when the mouse enters or leaves a menu item', function( t 
 	t.plan( 3 );
 
 	document.body.innerHTML = html;
-	var menu = new NavMenu( '.menu', { hoverTimeout: 0 } );
+	const menu = new NavMenu( '.menu', { hoverTimeout: 0 } );
 	menu.initialize();
 
-	var menuItem = document.getElementById( 'menu-item-1' );
+	const menuItem = document.getElementById( 'menu-item-1' );
 	t.equal( menu.isSubmenuExpanded( menuItem ), false );
 
 	triggerMouse( menuItem, 'mouseover' );
@@ -87,14 +87,14 @@ test( 'don\'t expand submenus on mouseover after a touchstart event on a link', 
 	t.plan( 3 );
 
 	document.body.innerHTML = html;
-	var menu = new NavMenu( '.menu', { hoverTimeout: 0 } );
+	const menu = new NavMenu( '.menu', { hoverTimeout: 0 } );
 	menu.initialize();
 
-	var menuItem = document.getElementById( 'menu-item-1' );
+	const menuItem = document.getElementById( 'menu-item-1' );
 	menu._isTouchStarted = true;
 	t.equal( menu.isSubmenuExpanded( menuItem ), false );
 
-	var menuLink = menuItem.querySelector( 'a' );
+	const menuLink = menuItem.querySelector( 'a' );
 	triggerMouse( menuLink, 'mouseover', menuItem );
 	t.equal( menu.isSubmenuExpanded( menuItem ), false );
 	t.equal( menu._isTouchStarted, false, '_touchStarted should be reset in the mouseover handler' );

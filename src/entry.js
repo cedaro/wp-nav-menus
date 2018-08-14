@@ -1,11 +1,11 @@
-var l10n,
-	$ = require( './query' ),
-	customizerPartials = {},
-	NavMenu = require( './nav-menu.js' ),
-	wp = require( 'wp' );
+import $ from './query';
+import NavMenu from './nav-menu';
+import wp from 'wp';
+
+const customizerPartials = {};
 
 // Merge global localized strings.
-l10n = $.extend({
+const l10n = $.extend({
 	collapseSubmenu: 'Collapse submenu',
 	expandSubmenu: 'Expand submenu'
 }, global._cedaroNavMenuL10n );
@@ -20,17 +20,15 @@ l10n = $.extend({
  * @param {wp.customize.selectiveRefresh.Placement} placement Partial placement.
  */
 function initializeCustomizePlacement( placement ) {
-	var addedMenu, removedMenu;
-
 	if ( ! ( placement.partial.id in customizerPartials ) ) {
 		return;
 	}
 
-	removedMenu = customizerPartials[ placement.partial.id ];
+	const removedMenu = customizerPartials[ placement.partial.id ];
 	removedMenu.destroy();
 
 	// Initialize the new placement.
-	addedMenu = new NavMenu( placement.container[0], removedMenu.options );
+	const addedMenu = new NavMenu( placement.container[0], removedMenu.options );
 	addedMenu.initialize();
 
 	// Synchronize expanded states from the removed menu.
@@ -46,7 +44,7 @@ function initializeCustomizePlacement( placement ) {
  * Selective refresh support in the customizer.
  */
 if ( wp && 'customize' in wp ) {
-	wp.customize.bind( 'preview-ready', function() {
+	wp.customize.bind( 'preview-ready', () => {
 		wp.customize.selectiveRefresh.bind( 'partial-content-rendered', initializeCustomizePlacement );
 	});
 }
@@ -58,29 +56,25 @@ if ( wp && 'customize' in wp ) {
  * @param {object}         options Menu options.
  * @return {NavMenu}               Nav menu instance.
  */
-module.exports = function( el, options ) {
-	var menu,
-		partialId;
-
+export default function( el, options = {} ) {
 	// Fail gracefully in unsupported browsers.
 	if ( ! ( 'addEventListener' in global ) ) {
 		return;
 	}
 
-	options = options || {};
 	options.l10n = options.l10n || {};
 
 	// Merge global localized strings.
 	$.extend( options.l10n, l10n );
 
-	menu = new NavMenu( el, options );
+	const menu = new NavMenu( el, options );
 
 	// Attempt to detect the partial id in the customizer and store a
 	// reference so it can be cleaned up during a selective refresh.
-	partialId = menu.el.getAttribute( 'data-customize-partial-id' );
+	const partialId = menu.el.getAttribute( 'data-customize-partial-id' );
 	if ( partialId ) {
 		customizerPartials[ partialId ] = menu;
 	}
 
 	return menu;
-};
+}

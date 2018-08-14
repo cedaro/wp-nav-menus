@@ -1,8 +1,6 @@
-var _ = require( './utils' );
+import _ from './utils';
 
-function Query( selector, context ) {
-	var i, length;
-
+function Query( selector, context = document ) {
 	if ( selector instanceof Query ) {
 		return selector;
 	}
@@ -11,7 +9,6 @@ function Query( selector, context ) {
 		return this;
 	}
 
-	context = context || document;
 	if ( context.length ) {
 		context = context[0];
 	}
@@ -25,9 +22,9 @@ function Query( selector, context ) {
 		this[0] = selector;
 	} else {
 		selector = Array.prototype.slice.call( selector );
-		length = this.length = selector.length;
+		const length = this.length = selector.length;
 
-		for ( i = 0; i < length; i++ ) {
+		for ( let i = 0; i < length; i++ ) {
 			this[ i ] = selector[ i ];
 		}
 	}
@@ -36,9 +33,8 @@ function Query( selector, context ) {
 _.extend( Query.prototype, {
 	length: 0,
 
-	closest: function( selector, context ) {
-		var el = this[0];
-		context = context || document.body;
+	closest: function( selector, context = document.body ) {
+		let el = this[0];
 
 		while ( el && el !== context ) {
 			if ( _.matches( el, selector ) ) {
@@ -67,16 +63,15 @@ _.extend( Query.prototype, {
 		return query( this[0].querySelectorAll( selector ) );
 	},
 
-	parents: function( selector, context ) {
-		var el = this[0],
-			parents = [];
-
-		context = context || document.body;
+	parents: function( selector, context = document.body ) {
+		let el = this[0];
+		const parents = [];
 
 		while ( el && el.parentElement && el.parentElement !== context ) {
 			if ( _.matches( el.parentElement, selector ) ) {
 				parents.push( el.parentElement );
 			}
+
 			el = el.parentElement;
 		}
 
@@ -84,7 +79,7 @@ _.extend( Query.prototype, {
 	},
 
 	up: function( selector, context ) {
-		var items = Array.prototype.slice.call( this.parents( selector, context ) );
+		const items = Array.prototype.slice.call( this.parents( selector, context ) );
 
 		if ( _.matches( this[0], selector ) ) {
 			items.unshift( this[0] );
@@ -98,15 +93,13 @@ function query( selector, context ) {
 	return new Query( selector, context );
 }
 
-module.exports = _.extend( query, _, {
+export default _.extend( query, _, {
 	isClickable: function( el ) {
-		var styles;
-
 		if ( ! el ) {
 			return false;
 		}
 
-		styles = window.getComputedStyle( el );
+		const styles = window.getComputedStyle( el );
 		return 'none' !== styles.display && 'none' !== styles.pointerEvents;
 	},
 

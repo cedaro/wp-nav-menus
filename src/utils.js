@@ -1,17 +1,16 @@
 function each( items, callback ) {
-	var i,
-		length = items.length;
+	const length = items.length;
 
-	for ( i = 0; i < length; i++ ) {
-		if ( false === callback.call( items[i], items[i], i ) ) {
+	for ( let i = 0; i < length; i++ ) {
+		if ( false === callback.call( items[ i ], items[ i ], i ) ) {
 			break;
 		}
 	}
 }
 
 function extend( target ) {
-	var i = 0,
-		length = arguments.length;
+	const length = arguments.length;
+	let i = 0;
 
 	target = target || {};
 
@@ -20,7 +19,7 @@ function extend( target ) {
 			continue;
 		}
 
-		for ( var key in arguments[ i ] ) {
+		for ( let key in arguments[ i ] ) {
 			if ( arguments[ i ].hasOwnProperty( key ) ) {
 				target[ key ] = arguments[ i ][ key ];
 			}
@@ -30,11 +29,11 @@ function extend( target ) {
 	return target;
 }
 
-function generateUniqueId( prefix ) {
-	prefix = prefix || '';
+function generateUniqueId( prefix = '' ) {
 	if ( '' !== prefix ) {
 		prefix += '-';
 	}
+
 	return prefix + Math.random().toString( 36 ).slice( 2, 15 );
 }
 
@@ -50,7 +49,7 @@ function getUniqueId( el, prefix ) {
  * @link https://developer.mozilla.org/en-US/docs/Web/API/Element/matches
  */
 function matches( el, selector ) {
-	var fn = el && (
+	const fn = el && (
 		el.matches ||
 		el.webkitMatchesSelector ||
 		el.mozMatchesSelector ||
@@ -61,7 +60,7 @@ function matches( el, selector ) {
 	return !! fn && fn.call( el, selector );
 }
 
-module.exports = {
+export default {
 	each: each,
 	extend: extend,
 	getUid: getUniqueId,

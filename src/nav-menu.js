@@ -1,5 +1,4 @@
-var $ = require ( './query' ),
-	document = window.document;
+import $ from './query';
 
 /**
  * Create a menu instance.
@@ -21,17 +20,15 @@ var $ = require ( './query' ),
  * @param {string}         options.submenuToggleMode          Mode for displaying submenus.
  */
 function NavMenu( el, options ) {
-	var menu = this;
-
 	this.el = $( el )[0];
 	this.options = $.extend( {}, NavMenu.defaults, options );
 	this.el.setAttribute( 'data-nav-menu-options', JSON.stringify( this.options ) );
 
 	// Automatically bind all event handlers.
-	Object.keys( Object.getPrototypeOf( this ) ).filter(function( key ) {
-		return 'function' === typeof menu[ key ] && 0 === key.indexOf( 'on' );
-	}).forEach(function( key ) {
-		menu[ key ] = menu[ key ].bind( menu );
+	Object.keys( Object.getPrototypeOf( this ) ).filter( key => {
+		return 'function' === typeof this[ key ] && 0 === key.indexOf( 'on' );
+	}).forEach( key => {
+		this[ key ] = this[ key ].bind( this );
 	});
 }
 
@@ -64,8 +61,6 @@ NavMenu.prototype = {
 	 * @return {this}
 	 */
 	initialize: function() {
-		var menu = this;
-
 		if ( this._initialized ) {
 			return;
 		}
@@ -73,13 +68,9 @@ NavMenu.prototype = {
 		this._initialized = true;
 
 		// Ensure every menu item has an id to manage the hover state timeouts.
-		this.$items = $( 'li', this.el ).each(function( el ) {
-			el.id = $.getUid( el, 'menu-item' );
-		});
+		this.$items = $( 'li', this.el ).each( el => el.id = $.getUid( el, 'menu-item' ) );
 
-		this.$submenus = $( 'li ul', this.el ).each(function( el ) {
-			el.setAttribute( 'aria-expanded', 'false' );
-		});
+		this.$submenus = $( 'li ul', this.el ).each( el => el.setAttribute( 'aria-expanded', 'false' ) );
 
 		if ( false !== this.options.submenuToggleInsert ) {
 			this.insertSubmenuToggleButtons();
@@ -101,14 +92,12 @@ NavMenu.prototype = {
 
 		// Expand current submenus on initialization.
 		if (
-			menu.options.expandCurrentItem &&
-			( 'click' === menu.options.submenuToggleMode || menu.isMobile() )
+			this.options.expandCurrentItem &&
+			( 'click' === this.options.submenuToggleMode || this.isMobile() )
 		) {
-			this.$items.filter(function( el ) {
+			this.$items.filter( el => {
 				return el.classList.contains( 'current-menu-item' ) || el.classList.contains( 'current-menu-ancestor' );
-			}).each(function( el ) {
-				menu.expandSubmenu( el );
-			});
+			}).each( el => this.expandSubmenu( el ) );
 		}
 
 		return this;
@@ -149,8 +138,8 @@ NavMenu.prototype = {
 	 * @param {Element} menuItem Menu item element.
 	 */
 	collapseSubmenu: function( menuItem ) {
-		var button = this.getSubmenuToggle( menuItem ),
-			$submenu = $( '.sub-menu', menuItem );
+		const button = this.getSubmenuToggle( menuItem );
+		const $submenu = $( '.sub-menu', menuItem );
 
 		menuItem.classList.remove( this.options.expandedMenuItemClass );
 
@@ -170,11 +159,9 @@ NavMenu.prototype = {
 	 * Collapse all submenus.
 	 */
 	collapseAllSubmenus: function() {
-		var menu = this;
-
-		this.$items.each(function( el ) {
-			el.classList.remove( menu.options.activeMenuItemClass );
-			menu.collapseSubmenu( el );
+		this.$items.each( el => {
+			el.classList.remove( this.options.activeMenuItemClass );
+			this.collapseSubmenu( el );
 		});
 	},
 
@@ -184,12 +171,10 @@ NavMenu.prototype = {
 	 * @param {Element} focusedEl Element that has focus.
 	 */
 	collapseUnrelatedSubmenus: function( focusedEl ) {
-		var menu = this;
-
-		this.$items.each(function( el ) {
+		this.$items.each( el => {
 			if ( ! el.contains( focusedEl ) ) {
-				el.classList.remove( menu.options.activeMenuItemClass );
-				menu.collapseSubmenu( el );
+				el.classList.remove( this.options.activeMenuItemClass );
+				this.collapseSubmenu( el );
 			}
 		});
 	},
@@ -200,8 +185,8 @@ NavMenu.prototype = {
 	 * @param {Element} menuItem Menu item element.
 	 */
 	expandSubmenu: function( menuItem ) {
-		var button = this.getSubmenuToggle( menuItem ),
-			$submenu = $( '.sub-menu', menuItem );
+		const button = this.getSubmenuToggle( menuItem );
+		const $submenu = $( '.sub-menu', menuItem );
 
 		menuItem.classList.add( this.options.activeMenuItemClass );
 
@@ -271,21 +256,18 @@ NavMenu.prototype = {
 	 * Insert toggle buttons in menu items that contain a submenu.
 	 */
 	insertSubmenuToggleButtons: function() {
-		var button, span,
-			menu = this;
-
-		button = document.createElement( 'button' );
-		button.setAttribute( 'class', menu.options.submenuToggleClass );
+		const button = document.createElement( 'button' );
+		button.setAttribute( 'class', this.options.submenuToggleClass );
 		button.setAttribute( 'aria-expanded', 'false' );
 
-		span = document.createElement( 'span' );
+		const span = document.createElement( 'span' );
 		span.setAttribute( 'class', 'screen-reader-text' );
 		span.innerHTML = this.options.l10n.expandSubmenu || 'Expand submenu';
 
 		button.appendChild( span );
 
-		this.$submenus.each(function( submenu ) {
-			var buttonInstance = button.cloneNode( true );
+		this.$submenus.each( submenu => {
+			const buttonInstance = button.cloneNode( true );
 
 			// Assign an id to each submenu to use in ARIA attributes.
 			if ( ! submenu.id ) {
@@ -294,7 +276,7 @@ NavMenu.prototype = {
 
 			buttonInstance.setAttribute( 'aria-controls', submenu.id );
 
-			if ( 'append' !== menu.options.submenuToggleInsert ) {
+			if ( 'append' !== this.options.submenuToggleInsert ) {
 				// Insert the toggle button before the submenu element.
 				submenu.parentElement.insertBefore( buttonInstance, submenu );
 				return;
@@ -302,7 +284,7 @@ NavMenu.prototype = {
 
 			// Append the toggle button to the parent item anchor element.
 			// This should primarily be used for backward compatibility.
-			$( submenu.parentElement.children ).each(function( el ) {
+			$( submenu.parentElement.children ).each( el => {
 				if ( 'A' === el.nodeName ) {
 					el.appendChild( buttonInstance );
 					return false;
@@ -358,8 +340,7 @@ NavMenu.prototype = {
 	 * @param {MouseEvent} e Mouse event object.
 	 */
 	onSubmenuToggleClick: function( e ) {
-		var menuItem,
-			button = $( e.target ).closest( '.' + this.options.submenuToggleClass, this.el );
+		const button = $( e.target ).closest( '.' + this.options.submenuToggleClass, this.el );
 
 		// Bail if this isn't a click on a toggle button.
 		if ( ! button ) {
@@ -368,7 +349,7 @@ NavMenu.prototype = {
 
 		e.preventDefault();
 
-		menuItem = $( e.target ).closest( 'li', this.el );
+		const menuItem = $( e.target ).closest( 'li', this.el );
 		this.toggleSubmenu( menuItem );
 	},
 
@@ -382,14 +363,12 @@ NavMenu.prototype = {
 	 * @param {TouchEvent} e Touch event object.
 	 */
 	onMenuLinkTouchStart: function( e ) {
-		var button, target;
-
 		// Bail if this isn't a touchstart on the anchor element.
 		if ( ! $.isElementOrDescendant( e.target, 'A', this.el ) ) {
 			return;
 		}
 
-		target = $( e.target ).closest( 'li', this.el );
+		const target = $( e.target ).closest( 'li', this.el );
 
 		// Bail if a target couldn't be found.
 		if ( ! target ) {
@@ -401,7 +380,7 @@ NavMenu.prototype = {
 			return;
 		}
 
-		button = this.getSubmenuToggle( target );
+		const button = this.getSubmenuToggle( target );
 
 		// Expand the submenu and disable the click event if a clickable toggle
 		// button isn't available.
@@ -437,15 +416,13 @@ NavMenu.prototype = {
 	 * @param {MouseEvent} e Mouse event object.
 	 */
 	onMenuItemMouseEnter: function( e ) {
-		var related, target,
-			isTouchEvent = this._touchStarted,
-			menu = this;
+		const isTouchEvent = this._touchStarted;
 
 		// Reset the touch started flag.
 		this._isTouchStarted = false;
 
-		target = $( e.target ).closest( 'li', this.el );
-		related = $( e.relatedTarget ).closest( 'li', this.el );
+		const target = $( e.target ).closest( 'li', this.el );
+		const related = $( e.relatedTarget ).closest( 'li', this.el );
 
 		/*
 		 * Bail if a target couldn't be found, or if the cursor is already in
@@ -457,9 +434,9 @@ NavMenu.prototype = {
 		}
 
 		// Clear the timeout to hide a submenu when re-entering an item.
-		$( e.target ).up( 'li', this.el ).each(function( el ) {
-			clearTimeout( menu._hoverTimeouts[ el.id ] );
-			el.classList.add( menu.options.activeMenuItemClass );
+		$( e.target ).up( 'li', this.el ).each( el => {
+			clearTimeout( this._hoverTimeouts[ el.id ] );
+			el.classList.add( this.options.activeMenuItemClass );
 		});
 
 		// Bail if there isn't a submenu in this item or it's already expanded.
@@ -508,22 +485,21 @@ NavMenu.prototype = {
 	 * @param {MouseEvent} e Moust event object.
 	 */
 	onMenuItemMouseLeave: function( e ) {
-		var menu = this,
-			isMobile = menu.isMobile();
+		const isMobile = this.isMobile();
 
-		$( e.target ).up( 'li', this.el ).filter(function( el ) {
+		$( e.target ).up( 'li', this.el ).filter( el => {
 			return el !== e.relatedTarget && ! el.contains( e.relatedTarget );
-		}).each(function( el ) {
-			el.classList.remove( menu.options.activeMenuItemClass );
+		}).each( el => {
+			el.classList.remove( this.options.activeMenuItemClass );
 
 			// Bail in mobile mode to prevent the menu from jumping.
 			if ( isMobile ) {
 				return;
 			}
 
-			menu._hoverTimeouts[ el.id ] = setTimeout(function() {
-				menu.collapseSubmenu( el );
-			}, menu.options.hoverTimeout );
+			this._hoverTimeouts[ el.id ] = setTimeout( () => {
+				this.collapseSubmenu( el );
+			}, this.options.hoverTimeout );
 		});
 	},
 
@@ -542,24 +518,21 @@ NavMenu.prototype = {
 	 * @param {FocusEvent} e Focus event object.
 	 */
 	onMenuLinkFocus: function( e ) {
-		var button, $parents,
-			menu = this;
-
 		// Collapse unrelated submenus except in mobile mode.
-		if ( 'click' !== menu.options.submenuToggleMode && ! menu.isMobile() ) {
-			menu.collapseUnrelatedSubmenus( e.target );
+		if ( 'click' !== this.options.submenuToggleMode && ! this.isMobile() ) {
+			this.collapseUnrelatedSubmenus( e.target );
 		}
 
-		$parents = $( e.target ).parents( 'li', menu.el ).each(function( el ) {
-			el.classList.add( menu.options.activeMenuItemClass );
+		const $parents = $( e.target ).parents( 'li', this.el ).each( el => {
+			el.classList.add( this.options.activeMenuItemClass );
 		});
 
 		// Bail if the target menu item doesn't have a submenu.
-		if ( ! menu.hasSubmenu( $parents[ 0 ] ) ) {
+		if ( ! this.hasSubmenu( $parents[ 0 ] ) ) {
 			return;
 		}
 
-		button = this.getSubmenuToggle( $parents[0] );
+		const button = this.getSubmenuToggle( $parents[0] );
 
 		/*
 		 * Expand the submenu if a toggle button isn't visible.
@@ -569,9 +542,7 @@ NavMenu.prototype = {
 		 * parents are visible.
 		 */
 		if ( ! button || ! $.isVisible( button ) ) {
-			$parents.each(function( el ) {
-				menu.expandSubmenu( el );
-			});
+			$parents.each( el =>  this.expandSubmenu( el ) );
 		}
 	},
 
@@ -595,11 +566,9 @@ NavMenu.prototype = {
 	 * @param {FocusEvent} e Focus event object.
 	 */
 	onMenuLinkBlur: function( e ) {
-		var menu = this;
-
 		// Remove the activeMenuItemClass from the parent menu items.
-		$( e.target ).parents( 'li', menu.el ).each(function( el ) {
-			el.classList.remove( menu.options.activeMenuItemClass );
+		$( e.target ).parents( 'li', this.el ).each( el => {
+			el.classList.remove( this.options.activeMenuItemClass );
 		});
 
 		// Bail if the relatedTarget event is null.
@@ -609,12 +578,12 @@ NavMenu.prototype = {
 
 		// Disable on mobile to prevent the menu from jumping while tabbing
 		// through menu items and toggle buttons.
-		if ( 'click' === menu.options.submenuToggleMode || menu.isMobile() ) {
+		if ( 'click' === this.options.submenuToggleMode || this.isMobile() ) {
 			return;
 		}
 
-		menu.collapseUnrelatedSubmenus( e.relatedTarget );
+		this.collapseUnrelatedSubmenus( e.relatedTarget );
 	}
 };
 
-module.exports = NavMenu;
+export default NavMenu;

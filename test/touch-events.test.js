@@ -3,7 +3,7 @@ import NavMenu from '../src/nav-menu.js';
 import test from 'tape';
 
 function triggerTouch( target, type ) {
-	var e = document.createEvent( 'CustomEvent' );
+	const e = document.createEvent( 'CustomEvent' );
 	e.initCustomEvent( type, true, true, {} );
 	return target.dispatchEvent( e );
 }
@@ -12,14 +12,14 @@ test( 'set menu._touchStarted when tapping a link or link descendant with a clic
 	t.plan( 4 );
 
 	document.body.innerHTML = html;
-	var menu = new NavMenu( '.menu' );
+	const menu = new NavMenu( '.menu' );
 	menu.initialize();
 
-	var menuItem = document.getElementById( 'menu-item-1' );
+	const menuItem = document.getElementById( 'menu-item-1' );
 	t.equal( menu.isSubmenuExpanded( menuItem ), false );
 
-	var menuLink = menuItem.querySelector( 'a' );
-	var result = triggerTouch( menuLink, 'touchstart' );
+	const menuLink = menuItem.querySelector( 'a' );
+	const result = triggerTouch( menuLink, 'touchstart' );
 	t.equal( result, true );
 	t.equal( menu.isSubmenuExpanded( menuItem ), false );
 	t.equal( menu._touchStarted, true );
@@ -29,17 +29,17 @@ test( 'expand submenu on touchstart if the toggle button is not clickable', func
 	t.plan( 4 );
 
 	document.body.innerHTML = html;
-	var menu = new NavMenu( '.menu' );
+	const menu = new NavMenu( '.menu' );
 	menu.initialize();
 
-	var menuItem = document.getElementById( 'menu-item-1' );
+	const menuItem = document.getElementById( 'menu-item-1' );
 	t.equal( menu.isSubmenuExpanded( menuItem ), false );
 
-	var submenuToggleButton = menu.getSubmenuToggle( menuItem );
+	const submenuToggleButton = menu.getSubmenuToggle( menuItem );
 	submenuToggleButton.style.display = 'none';
 
-	var menuLink = menuItem.querySelector( 'a' );
-	var result = triggerTouch( menuLink, 'touchstart' );
+	const menuLink = menuItem.querySelector( 'a' );
+	const result = triggerTouch( menuLink, 'touchstart' );
 	t.equal( result, false );
 	t.equal( menu.isSubmenuExpanded( menuItem ), true );
 	t.equal( menu._touchStarted, false );
