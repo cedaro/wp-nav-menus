@@ -1,5 +1,5 @@
-var $ = require( '../src/query' );
-var test = require( 'tape' );
+import $ from '../src/query';
+import test from 'tape';
 
 test( 'empty selector', function( t ) {
 	t.plan( 1 );

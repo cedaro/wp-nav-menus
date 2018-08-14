@@ -1,17 +1,17 @@
 {
-  "boss": true,
-  "curly": true,
-  "eqeqeq": true,
-  "eqnull": true,
-  "immed": true,
-  "latedef": "nofunc",
-  "newcap": true,
-  "noarg": true,
-  "quotmark": "single",
-  "sub": true,
-  "undef": true,
-  "unused": "vars",
+	"boss": true,
+	"curly": true,
+	"eqeqeq": true,
+	"eqnull": true,
+	"esversion": 6,
+	"immed": true,
+	"latedef": "nofunc",
+	"noarg": true,
+	"nonbsp": true,
+	"quotmark": "single",
+	"undef": true,
+	"unused": "vars",
 
-  "browser": true,
-  "browserify": true
+	"browser": true,
+	"browserify": true
 }

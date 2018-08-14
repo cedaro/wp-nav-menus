@@ -1,5 +1,5 @@
-var _ = require( '../src/utils' );
-var test = require( 'tape' );
+import _ from '../src/utils';
+import test from 'tape';
 
 test( '_.each', function( t ) {
 	t.plan( 4 );

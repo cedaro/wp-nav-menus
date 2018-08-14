@@ -1,6 +1,9 @@
+.babelrc
+.DS_Store
 .editorconfig
 .gitignore
 .jshintrc
-banner.tpl
-Gruntfile.js
+banner.txt
+coverage
 examples
+tmp

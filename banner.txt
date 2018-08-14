@@ -1,8 +1,0 @@
-/**
- * wp-nav-menus.js
- * https://github.com/cedaro/wp-nav-menus
- *
- * @copyright Copyright (c) 2016 Cedaro, LLC
- * @license MIT
- * @version <%= pkg.version %>
- */

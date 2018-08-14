@@ -1,8 +1,6 @@
-var fs = require( 'fs' );
-var NavMenu = require( '../src/nav-menu.js' );
-var test = require( 'tape' );
-
-var html = fs.readFileSync( __dirname + '/fixtures/nav-menu.html', 'utf-8' );
+import html from './fixtures/nav-menu.html';
+import NavMenu from '../src/nav-menu.js';
+import test from 'tape';
 
 function triggerTouch( target, type ) {
 	var e = document.createEvent( 'CustomEvent' );

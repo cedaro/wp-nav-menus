@@ -1,60 +1,44 @@
 {
-  "name": "wp-nav-menus",
-  "description": "Accessible, mobile-friendly navigation menus in WordPress themes.",
-  "version": "1.0.0",
-  "license": "MIT",
-  "repository": "cedaro/wp-nav-menus",
-  "homepage": "https://www.cedaro.com/",
-  "author": {
-    "name": "Brady Vercher",
-    "email": "brady@blazersix.com",
-    "url": "https://www.cedaro.com/"
-  },
-  "main": "index.js",
-  "keywords": [
-    "wordpress"
-  ],
-  "scripts": {
-    "prebuild": "npm run lint",
-    "build": "browserify -s cedaroNavMenu index.js -p [ bannerify --file ./banner.txt ] > dist/wp-nav-menus.js",
-    "postbuild": "uglifyjs dist/wp-nav-menus.js --mangle --comments -o dist/wp-nav-menus.min.js",
-    "lint": "jshint index.js src/*.js test/*.js",
-    "test": "browserify test/*.test.js | tape-run",
-    "test-coverage": "mkdir -p coverage && npm run test-coverage-tape-istanbul && npm run test-coverage-istanbul-report",
-    "test-coverage-tape-istanbul": "browserify test/*.test.js -p tape-istanbul/plugin | tape-run | tape-istanbul --output coverage/coverage.json",
-    "test-coverage-istanbul-report": "istanbul report --root coverage lcov",
-    "watch": "watchify -s cedaroNavMenu index.js -p [ bannerify --file ./banner.txt ] -v -o dist/wp-nav-menus.js"
-  },
-  "devDependencies": {
-    "bannerify": "^1.0.1",
-    "brfs": "^1.4.3",
-    "browserify": "^13.1.1",
-    "browserify-istanbul": "^2.0.0",
-    "browserify-shim": "^3.8.12",
-    "grunt": "^1.0.1",
-    "istanbul": "^0.4.5",
-    "jshint": "^2.9.4",
-    "strictify": "^0.2.0",
-    "tape": "^4.6.3",
-    "tape-istanbul": "^1.0.4",
-    "tape-run": "^2.1.5",
-    "uglify-js": "^2.7.5",
-    "watchify": "^3.8.0"
-  },
-  "browserify-shim": {
-    "jquery": "global:jQuery",
-    "wp": "global:wp"
-  },
-  "browserify": {
-    "transform": [
-      "brfs",
-      "browserify-shim",
-      "strictify"
-    ]
-  },
-  "files": [
-    "index.js",
-    "dist",
-    "src"
-  ]
+	"name": "wp-nav-menus",
+	"description": "Accessible, mobile-friendly navigation menus in WordPress themes.",
+	"version": "1.0.0",
+	"license": "MIT",
+	"repository": "cedaro/wp-nav-menus",
+	"homepage": "https://www.cedaro.com/",
+	"author": {
+		"name": "Brady Vercher",
+		"email": "brady@blazersix.com",
+		"url": "https://www.cedaro.com/"
+	},
+	"main": "index.js",
+	"keywords": [
+		"wordpress"
+	],
+	"scripts": {
+		"prebuild": "npm run lint",
+		"build": "webpack --mode=production",
+		"postbuild": "uglifyjs dist/wp-nav-menus.js --mangle --comments -o dist/wp-nav-menus.min.js",
+		"lint": "jshint index.js src/*.js test/*.js",
+		"dev": "webpack --watch",
+		"test": "webpack --config webpack.test.config.js"
+	},
+	"devDependencies": {
+		"babel-core": "^6.26.0",
+		"babel-loader": "^7.1.2",
+		"babel-preset-env": "^1.6.1",
+		"jshint": "^2.9.4",
+		"raw-loader": "^0.5.1",
+		"tape": "^4.6.3",
+		"tape-istanbul": "^1.0.4",
+		"tape-run": "^4.0.0",
+		"uglify-js": "^3.4.7",
+		"webpack": "^4.16.5",
+		"webpack-cli": "^3.1.0",
+		"webpack-tape-run": "0.0.7"
+	},
+	"files": [
+		"index.js",
+		"dist",
+		"src"
+	]
 }
