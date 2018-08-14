@@ -59,7 +59,7 @@ wp_enqueue_script(
 	'wp-nav-menus',
 	get_theme_file_uri( '/assets/js/vendor/wp-nav-menus.js' ),
 	array(),
-	'1.0.0',
+	'2.0.0',
 	true
 );
 

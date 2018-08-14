@@ -1,7 +1,7 @@
 {
 	"name": "wp-nav-menus",
 	"description": "Accessible, mobile-friendly navigation menus in WordPress themes.",
-	"version": "1.0.0",
+	"version": "2.0.0",
 	"license": "MIT",
 	"repository": "cedaro/wp-nav-menus",
 	"homepage": "https://www.cedaro.com/",
