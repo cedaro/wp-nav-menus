@@ -19,7 +19,7 @@
 		"build": "webpack --mode=production",
 		"postbuild": "uglifyjs dist/wp-nav-menus.js --mangle --comments -o dist/wp-nav-menus.min.js",
 		"lint": "jshint index.js src/*.js test/*.js",
-		"dev": "webpack --watch",
+		"dev": "webpack --mode=development --watch",
 		"test": "webpack --config webpack.test.config.js"
 	},
 	"devDependencies": {
