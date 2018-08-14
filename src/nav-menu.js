@@ -1,66 +1,50 @@
 import $ from './query';
 
-/**
- * Create a menu instance.
- *
- * @class NavMenu
- *
- * @param {Element|string} el                                 HTML element or selector.
- * @param {object}         options                            Menu options.
- * @param {string}         options.activeMenuItemClass        HTML class for active menu items.
- * @param {number}         options.breakpoint                 Breakpoint to switch between mobile and full site mode.
- * @param {boolean}        options.expandCurrentItem          Whether to expand the current menu item on initial load.
- * @param {string}         options.expandedMenuItemClass      HTML class applied to the menu item that contains an expanded submenu.
- * @param {string}         options.expandedSubmenuClass       HTML class applied to expanded submenus.
- * @param {string}         options.expandedSubmenuToggleClass HTML class applied to submenu toggle buttons when the submenu is expanded.
- * @param {number}         options.hoverTimeout               Delay in milliseconds before hiding submenus.
- * @param {object}         options.l10n                       Localized strings specific to this instance.
- * @param {string}         options.submenuToggleClass         HTML class for submenu toggle buttons.
- * @param {string}         options.submenuToggleInsert        Where to insert submenu toggle buttons. Defaults to before the submenu.
- * @param {string}         options.submenuToggleMode          Mode for displaying submenus.
- */
-function NavMenu( el, options ) {
-	this.el = $( el )[0];
-	this.options = $.extend( {}, NavMenu.defaults, options );
-	this.el.setAttribute( 'data-nav-menu-options', JSON.stringify( this.options ) );
+class NavMenu {
+	/**
+	 * Create a menu instance.
+	 *
+	 * @class NavMenu
+	 *
+	 * @param {Element|string} el                                 HTML element or selector.
+	 * @param {object}         options                            Menu options.
+	 * @param {string}         options.activeMenuItemClass        HTML class for active menu items.
+	 * @param {number}         options.breakpoint                 Breakpoint to switch between mobile and full site mode.
+	 * @param {boolean}        options.expandCurrentItem          Whether to expand the current menu item on initial load.
+	 * @param {string}         options.expandedMenuItemClass      HTML class applied to the menu item that contains an expanded submenu.
+	 * @param {string}         options.expandedSubmenuClass       HTML class applied to expanded submenus.
+	 * @param {string}         options.expandedSubmenuToggleClass HTML class applied to submenu toggle buttons when the submenu is expanded.
+	 * @param {number}         options.hoverTimeout               Delay in milliseconds before hiding submenus.
+	 * @param {object}         options.l10n                       Localized strings specific to this instance.
+	 * @param {string}         options.submenuToggleClass         HTML class for submenu toggle buttons.
+	 * @param {string}         options.submenuToggleInsert        Where to insert submenu toggle buttons. Defaults to before the submenu.
+	 * @param {string}         options.submenuToggleMode          Mode for displaying submenus.
+	 */
+	constructor ( el, options ) {
+		this._initialized = false;
+		this._hasExpandedSubmenu = false;
+		this._hoverTimeouts = [];
+		this._touchStarted = false;
+		this._viewportWidth = null;
 
-	// Automatically bind all event handlers.
-	Object.keys( Object.getPrototypeOf( this ) ).filter( key => {
-		return 'function' === typeof this[ key ] && 0 === key.indexOf( 'on' );
-	}).forEach( key => {
-		this[ key ] = this[ key ].bind( this );
-	});
-}
+		this.el = $( el )[0];
+		this.options = $.extend( {}, NavMenu.defaults, options );
+		this.el.setAttribute( 'data-nav-menu-options', JSON.stringify( this.options ) );
 
-NavMenu.defaults = {
-	breakpoint: 768, // disable
-	expandCurrentItem: false,
-	hoverTimeout: 50,
-	l10n: {},
-	submenuToggleInsert: '', // default|append|false
-	submenuToggleMode: 'hover', // hover|click; @todo hover-tap?
-
-	// Configurable HTML classes.
-	activeMenuItemClass: 'is-active',
-	expandedMenuItemClass: 'is-sub-menu-open',
-	expandedSubmenuClass: 'is-open',
-	expandedSubmenuToggleClass: 'is-open',
-	submenuToggleClass: 'sub-menu-toggle'
-};
-
-NavMenu.prototype = {
-	_initialized: false,
-	_hasExpandedSubmenu: false,
-	_hoverTimeouts: [],
-	_touchStarted: false,
-	_viewportWidth: null,
+		// Automatically bind all event handlers.
+		Object.getOwnPropertyNames( NavMenu.prototype ).filter( key => {
+			return 'function' === typeof this[ key ] && 0 === key.indexOf( 'on' );
+		}).forEach( key => {
+			this[ key ] = this[ key ].bind( this );
+		});
+	}
 
 	/**
 	 * Initialize the menu.
 	 *
 	 * @return {this}
 	 */
-	initialize: function() {
+	initialize() {
 		if ( this._initialized ) {
 			return;
 		}
@@ -101,7 +85,7 @@ NavMenu.prototype = {
 		}
 
 		return this;
-	},
+	}
 
 	/**
 	 * Destroy the menu.
@@ -110,34 +94,34 @@ NavMenu.prototype = {
 	 *
 	 * @todo Consider removing toggle buttons.
 	 */
-	destroy: function() {
+	destroy() {
 		document.removeEventListener( 'click', this.onDocumentClick, true );
 		this.el.removeEventListener( 'click', this.onSubmenuToggleClick, false );
 		this.el.removeEventListener( 'mouseover', this.onMenuItemMouseEnter, false );
 		this.el.removeEventListener( 'mouseout', this.onMenuItemMouseLeave, false );
 		this.el.removeEventListener( 'focus', this.onMenuLinkFocus, true );
 		this.el.removeEventListener( 'blur', this.onMenuLinkBlur, true );
-	},
+	}
 
 	/**
 	 * Whether the menu is in mobile mode.
 	 *
 	 * @return {boolean}
 	 */
-	isMobile: function() {
+	isMobile() {
 		if ( 'disable' === this.options.breakpoint ) {
 			return true;
 		}
 
 		return this.getViewportWidth() < this.options.breakpoint;
-	},
+	}
 
 	/**
 	 * Collapse the submenu in a menu item.
 	 *
 	 * @param {Element} menuItem Menu item element.
 	 */
-	collapseSubmenu: function( menuItem ) {
+	collapseSubmenu( menuItem ) {
 		const button = this.getSubmenuToggle( menuItem );
 		const $submenu = $( '.sub-menu', menuItem );
 
@@ -153,38 +137,38 @@ NavMenu.prototype = {
 			$submenu[0].classList.remove( this.options.expandedSubmenuClass );
 			$submenu[0].setAttribute( 'aria-expanded', 'false' );
 		}
-	},
+	}
 
 	/**
 	 * Collapse all submenus.
 	 */
-	collapseAllSubmenus: function() {
+	collapseAllSubmenus() {
 		this.$items.each( el => {
 			el.classList.remove( this.options.activeMenuItemClass );
 			this.collapseSubmenu( el );
 		});
-	},
+	}
 
 	/**
 	 * Collapse submenus in branches that don't contain the focused element.
 	 *
 	 * @param {Element} focusedEl Element that has focus.
 	 */
-	collapseUnrelatedSubmenus: function( focusedEl ) {
+	collapseUnrelatedSubmenus( focusedEl ) {
 		this.$items.each( el => {
 			if ( ! el.contains( focusedEl ) ) {
 				el.classList.remove( this.options.activeMenuItemClass );
 				this.collapseSubmenu( el );
 			}
 		});
-	},
+	}
 
 	/**
 	 * Expand the submenu in a menu item.
 	 *
 	 * @param {Element} menuItem Menu item element.
 	 */
-	expandSubmenu: function( menuItem ) {
+	expandSubmenu( menuItem ) {
 		const button = this.getSubmenuToggle( menuItem );
 		const $submenu = $( '.sub-menu', menuItem );
 
@@ -206,16 +190,16 @@ NavMenu.prototype = {
 			$submenu[0].classList.add( this.options.expandedSubmenuClass );
 			$submenu[0].setAttribute( 'aria-expanded', 'true' );
 		}
-	},
+	}
 
 	/**
 	 * Retrieve the viewport width.
 	 *
 	 * @return {number}
 	 */
-	getViewportWidth: function() {
+	getViewportWidth() {
 		return this._viewportWidth || Math.max( document.documentElement.clientWidth, window.innerWidth || 0 );
-	},
+	}
 
 	/**
 	 * Set the viewport width.
@@ -223,10 +207,10 @@ NavMenu.prototype = {
 	 * @param  {number} width Width of the viewport.
 	 * @return {this}
 	 */
-	setViewportWidth: function( width ) {
+	setViewportWidth( width ) {
 		this._viewportWidth = parseInt( width, 10 );
 		return this;
-	},
+	}
 
 	/**
 	 * Retrieve the submenu toggle button from a menu item.
@@ -234,9 +218,9 @@ NavMenu.prototype = {
 	 * @param  {Element} menuItem Menu item element.
 	 * @return {Element}
 	 */
-	getSubmenuToggle: function( menuItem ) {
+	getSubmenuToggle( menuItem ) {
 		return $( '.' + this.options.submenuToggleClass, menuItem )[0];
-	},
+	}
 
 	/**
 	 * Whether a menu item has a submenu.
@@ -248,14 +232,14 @@ NavMenu.prototype = {
 	 * @param  {Element}  menuItem Menu item element.
 	 * @return {Boolean}
 	 */
-	hasSubmenu: function ( menuItem ) {
+	hasSubmenu( menuItem ) {
 		return $( '.sub-menu', menuItem ).length > 0; //classList.contains( 'menu-item-has-children' );
-	},
+	}
 
 	/**
 	 * Insert toggle buttons in menu items that contain a submenu.
 	 */
-	insertSubmenuToggleButtons: function() {
+	insertSubmenuToggleButtons() {
 		const button = document.createElement( 'button' );
 		button.setAttribute( 'class', this.options.submenuToggleClass );
 		button.setAttribute( 'aria-expanded', 'false' );
@@ -291,24 +275,24 @@ NavMenu.prototype = {
 				}
 			});
 		});
-	},
+	}
 
-	isSubmenuExpanded: function( menuItem ) {
+	isSubmenuExpanded( menuItem ) {
 		return menuItem.classList.contains( this.options.expandedMenuItemClass );
-	},
+	}
 
 	/**
 	 * Toggle the submenu in a menu item.
 	 *
 	 * @param {Element} menuItem Menu item element.
 	 */
-	toggleSubmenu: function( menuItem ) {
+	toggleSubmenu( menuItem ) {
 		if ( this.isSubmenuExpanded( menuItem ) ) {
 			this.collapseSubmenu( menuItem );
 		} else {
 			this.expandSubmenu( menuItem );
 		}
-	},
+	}
 
 	/**
 	 * Collapse all submenus when clicking outside the menu.
@@ -320,7 +304,7 @@ NavMenu.prototype = {
 	 * Submenus also won't be collapsed when the keyboard is used to focus
 	 * an element and a click occurs outside the menu.
 	 */
-	onDocumentClick: function( e ) {
+	onDocumentClick( e ) {
 		// Don't do this in click mode or on mobile.
 		if ( 'click' === this.options.submenuToggleMode || this.isMobile() ) {
 			return;
@@ -329,7 +313,7 @@ NavMenu.prototype = {
 		if ( this.el === e.target || ! this.el.contains( e.target ) ) {
 			this.collapseAllSubmenus();
 		}
-	},
+	}
 
 	/**
 	 * Handle clicks on submenu toggle buttons.
@@ -339,7 +323,7 @@ NavMenu.prototype = {
 	 *
 	 * @param {MouseEvent} e Mouse event object.
 	 */
-	onSubmenuToggleClick: function( e ) {
+	onSubmenuToggleClick( e ) {
 		const button = $( e.target ).closest( '.' + this.options.submenuToggleClass, this.el );
 
 		// Bail if this isn't a click on a toggle button.
@@ -351,7 +335,7 @@ NavMenu.prototype = {
 
 		const menuItem = $( e.target ).closest( 'li', this.el );
 		this.toggleSubmenu( menuItem );
-	},
+	}
 
 	/**
 	 * Handle touchstart events on menu links.
@@ -362,7 +346,7 @@ NavMenu.prototype = {
 	 *
 	 * @param {TouchEvent} e Touch event object.
 	 */
-	onMenuLinkTouchStart: function( e ) {
+	onMenuLinkTouchStart( e ) {
 		// Bail if this isn't a touchstart on the anchor element.
 		if ( ! $.isElementOrDescendant( e.target, 'A', this.el ) ) {
 			return;
@@ -392,7 +376,7 @@ NavMenu.prototype = {
 		} else {
 			this._touchStarted = true;
 		}
-	},
+	}
 
 	/**
 	 * Handle mouseenter events on menu items.
@@ -415,7 +399,7 @@ NavMenu.prototype = {
 	 *
 	 * @param {MouseEvent} e Mouse event object.
 	 */
-	onMenuItemMouseEnter: function( e ) {
+	onMenuItemMouseEnter( e ) {
 		const isTouchEvent = this._touchStarted;
 
 		// Reset the touch started flag.
@@ -468,7 +452,7 @@ NavMenu.prototype = {
 				this.expandSubmenu( target );
 			}
 		}
-	},
+	}
 
 	/**
 	 * Handle mouseleave events on menu items.
@@ -484,7 +468,7 @@ NavMenu.prototype = {
 	 *
 	 * @param {MouseEvent} e Moust event object.
 	 */
-	onMenuItemMouseLeave: function( e ) {
+	onMenuItemMouseLeave( e ) {
 		const isMobile = this.isMobile();
 
 		$( e.target ).up( 'li', this.el ).filter( el => {
@@ -501,7 +485,7 @@ NavMenu.prototype = {
 				this.collapseSubmenu( el );
 			}, this.options.hoverTimeout );
 		});
-	},
+	}
 
 	/**
 	 * Handle the focus event on elements within the menu.
@@ -517,7 +501,7 @@ NavMenu.prototype = {
 	 *
 	 * @param {FocusEvent} e Focus event object.
 	 */
-	onMenuLinkFocus: function( e ) {
+	onMenuLinkFocus( e ) {
 		// Collapse unrelated submenus except in mobile mode.
 		if ( 'click' !== this.options.submenuToggleMode && ! this.isMobile() ) {
 			this.collapseUnrelatedSubmenus( e.target );
@@ -544,7 +528,7 @@ NavMenu.prototype = {
 		if ( ! button || ! $.isVisible( button ) ) {
 			$parents.each( el =>  this.expandSubmenu( el ) );
 		}
-	},
+	}
 
 	/**
 	 * Close submenus when focus leaves the containing item.
@@ -565,7 +549,7 @@ NavMenu.prototype = {
 	 *
 	 * @param {FocusEvent} e Focus event object.
 	 */
-	onMenuLinkBlur: function( e ) {
+	onMenuLinkBlur( e ) {
 		// Remove the activeMenuItemClass from the parent menu items.
 		$( e.target ).parents( 'li', this.el ).each( el => {
 			el.classList.remove( this.options.activeMenuItemClass );
@@ -584,6 +568,22 @@ NavMenu.prototype = {
 
 		this.collapseUnrelatedSubmenus( e.relatedTarget );
 	}
+}
+
+NavMenu.defaults = {
+	breakpoint: 768, // disable
+	expandCurrentItem: false,
+	hoverTimeout: 50,
+	l10n: {},
+	submenuToggleInsert: '', // default|append|false
+	submenuToggleMode: 'hover', // hover|click; @todo hover-tap?
+
+	// Configurable HTML classes.
+	activeMenuItemClass: 'is-active',
+	expandedMenuItemClass: 'is-sub-menu-open',
+	expandedSubmenuClass: 'is-open',
+	expandedSubmenuToggleClass: 'is-open',
+	submenuToggleClass: 'sub-menu-toggle'
 };
 
 export default NavMenu;
